@@ -1,4 +1,4 @@
-# XGBoostClfCatBoostClf
+# XGBoostClassifier
 
 
 ## Objective
