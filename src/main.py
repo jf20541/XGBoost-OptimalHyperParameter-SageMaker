@@ -1,56 +1,90 @@
 import pandas as pd
 import numpy as np
-import xgboost as xgb
-from sklearn.metrics import accuracy_score
-from hyperopt import STATUS_OK, Trials, fmin, hp, tpe
+from functools import partial
+from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import accuracy_score, roc_auc_score
+from sklearn.ensemble import RandomForestClassifier
+from skopt import gp_minimize
+from skopt import space
+from xgboost import XGBClassifier
 import config
-from sklearn.model_selection import StratifiedKFold, train_test_split
+
+
+def optimize(params, param_names, x, y):
+    """Takes all arguments from search space and traning features/target
+        Initializes the models by setting the chosen param and runs CV
+    Args:
+        params [dict]: convert params to dict
+        param_names [list]: make a list of param names
+        x [float]: feature values
+        y [int]: target values as binary
+    Returns:
+        [float]: Returns an accuracy score after 5 Folds
+    """
+    # set the parameters as dictionaries
+    params = dict(zip(param_names, params))
+
+    # initiate XGBClassifier and K-fold (5)
+    model = XGBClassifier(**params)
+    kf = StratifiedKFold(n_splits=5)
+    acc = []
+
+    # loop over kfolds
+    for idx in kf.split(X=x, y=y):
+        train_idx, test_idx = idx[0], idx[1]
+        xtrain = x[train_idx]
+        ytrain = y[train_idx]
+
+        xtest = x[test_idx]
+        ytest = y[test_idx]
+
+        model.fit(xtrain, ytrain)
+        pred = model.predict(xtest)
+
+        # append mean-accuracy to empty list
+        fold_accuracy = accuracy_score(ytest, pred)
+        acc.append(fold_accuracy)
+    # return negative acc to find max optimization
+    return -np.mean(acc)
+
 
 df = pd.read_csv(config.CLEAN_FILE)
 targets = df['response'].values
 features = df.drop('response', axis=1).values
 
-# kfold = StratifiedKFold(n_splits=5, shuffle=True)
+# define the range of input values to test the Bayes_op to create prop-distribution
+param_space = [
+    space.Integer(4, 24, name="max_depth"),
+    space.Integer(1, 9, name='gamma'),
+    space.Integer(20, 150, name="reg_alpha"),
+    space.Real(0.01, 1, prior='uniform', name="reg_lambda"),
+    space.Integer(1, 10, name="min_child_weight"),
+    space.Real(0.05, 0.30,prior='uniform', name='eta'),
+    space.Real(0.5, 1, prior='uniform', name='colsample_bytree'),
+    space.Real(0.6, 0.95, prior='uniform',name='base_score')
+]
 
-x_train, x_test, y_train, y_test = train_test_split(features, targets, test_size=0.2)
+param_names = [
+    "max_depth",
+    "gamma",
+    "reg_alpha",
+    "reg_lambda",
+    "min_child_weight",
+    'eta',
+    'colsample_bytree',
+    'base_score'
+]
 
+# define the loss function to minimize (acc will be negative)
+optimization_function = partial(
+    optimize, param_names=param_names, x=features, y=targets)
 
-space={'max_depth': hp.quniform("max_depth", 3, 18, 1),
-        'gamma': hp.uniform ('gamma', 1,9),
-        'reg_alpha' : hp.quniform('reg_alpha', 40,180,1),
-        'reg_lambda' : hp.uniform('reg_lambda', 0,1),
-        'colsample_bytree' : hp.uniform('colsample_bytree', 0.5,1),
-        'min_child_weight' : hp.quniform('min_child_weight', 0, 10, 1),
-        'n_estimators': 180,
-        'seed': 0
-    }
-
-def objective(space):
-    clf=xgb.XGBClassifier(
-                    n_estimators =space['n_estimators'], max_depth = int(space['max_depth']), gamma = space['gamma'],
-                    reg_alpha = int(space['reg_alpha']),min_child_weight=int(space['min_child_weight']),
-                    colsample_bytree=int(space['colsample_bytree']))
-    
-    evaluation = [( x_train, y_train), ( x_test, y_test)]
-    
-    clf.fit(x_train, y_train,
-            eval_set=evaluation, eval_metric="auc",
-            early_stopping_rounds=10,verbose=False)
-    
-
-    pred = clf.predict(x_test)
-    accuracy = accuracy_score(y_test, pred>0.5)
-    print ("SCORE:", accuracy)
-    return {'loss': -accuracy, 'status': STATUS_OK }
-
-
-trials = Trials()
-
-best_hyperparams = fmin(fn = objective,
-                        space = space,
-                        algo = tpe.suggest,
-                        max_evals = 100,
-                        trials = trials)
-
-print("The best hyperparameters are : ","\n")
-print(best_hyperparams)
+# initiate gp_minimize for Bayesian Optimization to select the best input values
+result = gp_minimize(
+    optimization_function,
+    dimensions=param_space,
+    n_calls=10,
+    n_random_starts=10,
+    verbose=10,
+)
+print(dict(zip(param_names, result.x)))
