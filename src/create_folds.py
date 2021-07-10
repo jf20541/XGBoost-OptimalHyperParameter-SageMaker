@@ -1,4 +1,3 @@
-# example of stratified k-fold cross-validation with an imbalanced dataset
 from sklearn.model_selection import StratifiedKFold
 import pandas as pd
 import config
