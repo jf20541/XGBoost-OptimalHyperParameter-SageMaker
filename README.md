@@ -1,27 +1,22 @@
 # XGBoostClassifierHyperParameter
 
-
 ## Objective
 Build a Supervised Learning Classification model to predict whether the customers will be interested in vehicle insurance provided by the company. With an imbalanced binary classification dataset (~10% of target values are interested). The primary metric to evaluated XGBoost Model will be ROC-AUC, use Bayesian Optimization Gaussian Process to optimize hyper-parameters, and use Stratified K-Fold to reduce overfitting.
 
-
-## Model
+## Model and Metric 
 XGBoost Classifier: An ensembled classification model by combining the outputs from individual trees using boosting. It combines weak learners sequentially so that each tree corrects the residuals from the previous trees. Trees are added until no further improvements can be made to the model.
 
+Metric: Receiver Operating Characteristic Curve (ROC AUC) and Minimize “binary:logistic“: XGBoost loss function for binary classification.
 
 ## Parameters
-- max_depth: Maximum depth of a tree
-- gamma: Minimum loss reduction required to make a further partition on a leaf node of the tree
-- reg_alpha: L1 regularization term on weights
-- reg_lambda: L2 regularization term on weights
-- min_child_weight: Minimum sum of instance weight (hessian) needed in a child
-- eta: Learning rate, step size shrinkage used in update to prevents overfitting.
-- colsample_bytree: Subsample ratio of columns when constructing each tree
-- base_score: Initial prediction score of all instances, global bias. Since dataset is imbalanced (~90% would be a recommended base score)
-
-
-## Metric
-ROC-Area Under Curve (ROC AUC) 
+- ```max_depth:``` Maximum depth of a tree
+- ```gamma:``` Minimum loss reduction required to make a further partition on a leaf node of the tree
+- ```reg_alpha:``` L1 regularization term on weights
+- ```reg_lambda:``` L2 regularization term on weights
+- ```min_child_weight:``` Minimum sum of instance weight (hessian) needed in a child
+- ```eta:``` Learning rate, step size shrinkage used in update to prevents overfitting.
+- ```colsample_bytree:``` Subsample ratio of columns when constructing each tree
+- ```base_score:``` Initial prediction score of all instances, global bias. Since dataset is imbalanced (~90% would be a recommended base score)
 
 ## Output
 ```bash
@@ -40,12 +35,23 @@ Optimal Hyper-Parameters:
 ```
 
 
-### Code
-Created 5 modules
-- `main.py`: 
-- `data.py`: 
-- `create_folds.py`: initiate StratefiedKFold since target values are skewed distribution.
+## Code
+- `main.py`: Initiated the XGBoost Classifier and optimized its parameter with Bayesian Optimization
+- `data.py`: Cleaned and featured engineered the dataset 
+- `create_folds.py`: Stratified K-Fold cross-validation with an imbalanced dataset
 - `config.py`: Defined file paths as global variable
+
+## XGBoost Step-by-Step
+
+### Summary 
+Calculate the Similarity Score and Gain to determine how to split the data and we prune the tree by calculating the difference between Gain values and Gamma (hyper-parameter). Then calculate the output values for the leaves. Define a regularization Lambda parameter which helps reduce the similarity score and smaller outputs values for the leaves. 
+1. XGBoost makes an initial prediction as a probability to a log(odds) value for classification
+2. Defines a thresholds to clusters the residuals
+3. Calculates the similarity scores by fitting the trees to the residuals and gets the prediction from the previous tree
+4. Set Lambda as the regularization parameter (reduces Similarity Scores thus reduce Gain value)
+5. Calculate the Gain by adding Similarity Scores from all leafs to maximize the Gain value to set a proper threshold
+6. Define Gamma, calculates the difference between the Gain Value associciated with the lowest branch if g<0 the leaf is pruned.
+7. When tree is finished, we add the log(odds)-previous prediction to the output of the tree multiplied by the Learning Rate (eta) 
 
 
 ## Data
