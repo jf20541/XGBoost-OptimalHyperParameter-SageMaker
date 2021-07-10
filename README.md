@@ -6,7 +6,7 @@ Build a Supervised Learning Classification model to predict whether the customer
 ## Model and Metric 
 XGBoost Classifier: An ensembled classification model by combining the outputs from individual trees using boosting. It combines weak learners sequentially so that each tree corrects the residuals from the previous trees. Trees are added until no further improvements can be made to the model.
 
-ROC-Area Under Curve (ROC AUC) since the dataset targets are inbalanced 
+Metric: Receiver Operating Characteristic Curve (ROC AUC) and Minimize “binary:logistic“: XGBoost loss function for binary classification.
 
 ## Parameters
 - ```max_depth:``` Maximum depth of a tree
@@ -42,16 +42,17 @@ Optimal Hyper-Parameters:
 - `config.py`: Defined file paths as global variable
 
 ## XGBoost Step-by-Step
+
+### Summary 
+Calculate the Similarity Score and Gain to determine how to split the data and we prune the tree by calculating the difference between Gain values and Gamma (hyper-parameter). Then calculate the output values for the leaves. Define a regularization Lambda parameter which helps reduce the similarity score and smaller outputs values for the leaves. 
 1. XGBoost makes an initial prediction as a probability to a log(odds) value for classification
-2. Define a thresholds and clusters residuals in the tree
-3. Calculate the Similarity Scores by fitting the trees to the residuals and get the prediction from the previous tree
-4. Define Lambda as the regularization parameter (reduces Similarity Scores/Gain value)
+2. Defines a thresholds to clusters the residuals
+3. Calculates the similarity scores by fitting the trees to the residuals and gets the prediction from the previous tree
+4. Set Lambda as the regularization parameter (reduces Similarity Scores thus reduce Gain value)
 5. Calculate the Gain by adding Similarity Scores from all leafs to maximize the Gain value to set a proper threshold
 6. Define Gamma, calculates the difference between the Gain Value associciated with the lowest branch if g<0 the leaf is pruned.
 7. When tree is finished, we add the log(odds)-previous prediction to the output of the tree multiplied by the Learning Rate (eta) 
 
-### Summary 
-We calculate the Similarity Score and Gain to determine how to split the data and we prune the tree by calculating the difference between Gain values and Gamma (hyper-parameter). Then we calculate the output values for the leaves. Define a regularization Lambda parameter which helps reduce the similarity score and smaller outputs values for the leaves. 
 
 ## Data
 [Kaggle Dataset](https://www.kaggle.com/anmolkumar/health-insurance-cross-sell-prediction)
