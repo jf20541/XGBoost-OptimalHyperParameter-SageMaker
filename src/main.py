@@ -12,14 +12,14 @@ import config
 
 def optimize(params, param_names, x, y):
     """Takes all arguments from search space and traning features/target
-        Initializes the models by setting the chosen param and runs CV
+        Initializes the models by setting the chosen param and runs StratifiedKFold
     Args:
         params [dict]: convert params to dict
         param_names [list]: make a list of param names
         x [float]: feature values
-        y [int]: target values as binary
+        y [int]: target values are binary
     Returns:
-        [float]: Returns an accuracy score after 5 Folds
+        [float]: Returns an accuracy score for 5 Folds
     """
     # set the parameters as dictionaries
     params = dict(zip(param_names, params))
