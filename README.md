@@ -25,16 +25,18 @@ ROC-Area Under Curve (ROC AUC)
 
 ## Output
 ```bash
-XGBoost Classifier with Bayesian Optimization Gaussian: 90.81%
+XGBoost Classifier with Bayesian Optimization Gaussian: 90.85%
 
-Best Hyper-Parameters:
+Optimal Hyper-Parameters:
 
-'colsample_bytree': 0.652800822253059
-'gamma': 3.8494570009602613 
-'max_depth': 8.0
-'min_child_weight': 0.0
-'reg_alpha': 104.0
-'reg_lambda': 0.8095864282203186
+'base_score': 0.5074025941621864
+'colsample_bytree': 0.7805503460343888
+'gamma': 8.815330570605372 
+'max_depth': 7.0
+'min_child_weight': 1.0
+'reg_alpha': 170.0
+'reg_lambda': 0.8244076191380255
+'eta': 0.24528128897339257
 ```
 
 
