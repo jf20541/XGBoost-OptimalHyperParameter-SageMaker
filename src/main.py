@@ -49,19 +49,19 @@ def optimize(params, param_names, x, y):
 
 
 df = pd.read_csv(config.CLEAN_FILE)
-targets = df['response'].values
-features = df.drop('response', axis=1).values
+targets = df["response"].values
+features = df.drop("response", axis=1).values
 
 # define the range of input values to test the Bayes_op to create prop-distribution
 param_space = [
     space.Integer(4, 24, name="max_depth"),
-    space.Integer(1, 9, name='gamma'),
+    space.Integer(1, 9, name="gamma"),
     space.Integer(20, 150, name="reg_alpha"),
-    space.Real(0.01, 1, prior='uniform', name="reg_lambda"),
+    space.Real(0.01, 1, prior="uniform", name="reg_lambda"),
     space.Integer(1, 10, name="min_child_weight"),
-    space.Real(0.05, 0.30,prior='uniform', name='eta'),
-    space.Real(0.5, 1, prior='uniform', name='colsample_bytree'),
-    space.Real(0.6, 0.95, prior='uniform',name='base_score')
+    space.Real(0.05, 0.30, prior="uniform", name="eta"),
+    space.Real(0.5, 1, prior="uniform", name="colsample_bytree"),
+    space.Real(0.6, 0.95, prior="uniform", name="base_score"),
 ]
 
 param_names = [
@@ -70,14 +70,15 @@ param_names = [
     "reg_alpha",
     "reg_lambda",
     "min_child_weight",
-    'eta',
-    'colsample_bytree',
-    'base_score'
+    "eta",
+    "colsample_bytree",
+    "base_score",
 ]
 
 # define the loss function to minimize (acc will be negative)
 optimization_function = partial(
-    optimize, param_names=param_names, x=features, y=targets)
+    optimize, param_names=param_names, x=features, y=targets
+)
 
 # initiate gp_minimize for Bayesian Optimization to select the best input values
 result = gp_minimize(
