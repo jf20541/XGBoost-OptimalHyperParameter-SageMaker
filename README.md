@@ -6,7 +6,7 @@ Build a Supervised Learning Classification model to predict whether the customer
 ## Model and Metric 
 XGBoost Classifier: An ensembled classification model by combining the outputs from individual trees using boosting. It combines weak learners sequentially so that each tree corrects the residuals from the previous trees. Trees are added until no further improvements can be made to the model.
 
-Metric: Receiver Operating Characteristic Curve (ROC AUC) and Minimize “binary:logistic“: XGBoost loss function for binary classification.
+Metric: Receiver Operating Characteristic Curve (ROC AUC) and Minimize ```binary:logistic:``` XGBoost loss function for binary classification.
 
 ## Parameters
 - ```max_depth:``` Maximum depth of a tree
