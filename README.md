@@ -8,16 +8,21 @@ XGBoost Classifier: An ensembled classification model by combining the outputs f
 
 Metric: Receiver Operating Characteristic Curve (ROC AUC) and Minimize ```binary:logistic:``` XGBoost loss function for binary classification.
 
-## Parameters
-- ```max_depth:``` Maximum depth of a tree
-- ```gamma:``` Minimum loss reduction required to make a further partition on a leaf node of the tree
-- ```reg_alpha:``` L1 regularization term on weights
-- ```reg_lambda:``` L2 regularization term on weights
-- ```min_child_weight:``` Minimum sum of instance weight (hessian) needed in a child
-- ```eta:``` Learning rate, step size shrinkage used in update to prevents overfitting.
-- ```colsample_bytree:``` Subsample ratio of columns when constructing each tree
-- ```base_score:``` Initial prediction score of all instances, global bias. Since dataset is imbalanced (~90% would be a recommended base score)
-
+## Repository File Structure
+    ├── src          
+    │   ├── main.py              # Initiated the XGBoost Classifier and optimized its parameter with Bayesian Optimization
+    │   ├── data.py              # Cleaned and featured engineered the dataset
+    │   ├── create_folds.py      # Stratified K-Fold cross-validation with an imbalanced dataset
+    │   └── config.py            # Define path as global variable
+    ├── inputs
+    │   ├── train.csv            # Training dataset
+    │   ├── test.csv             # Testing dataset
+    │   └── clean_data.csv       # Cleaned data 
+    ├── notebooks
+    │   └── healthinsurance.ipynb# Exploratory Data Analysis and Feature Engineering
+    ├── requierments.txt         # Packages used for project
+    └── README.md
+    
 ## Output
 ```bash
 XGBoost Classifier with Bayesian Optimization Gaussian: 90.85%
@@ -33,13 +38,15 @@ Optimal Hyper-Parameters:
 'reg_lambda': 0.8244076191380255
 'eta': 0.24528128897339257
 ```
-
-
-## Code
-- `main.py`: Initiated the XGBoost Classifier and optimized its parameter with Bayesian Optimization
-- `data.py`: Cleaned and featured engineered the dataset 
-- `create_folds.py`: Stratified K-Fold cross-validation with an imbalanced dataset
-- `config.py`: Defined file paths as global variable
+## Parameters
+- ```max_depth:``` Maximum depth of a tree
+- ```gamma:``` Minimum loss reduction required to make a further partition on a leaf node of the tree
+- ```reg_alpha:``` L1 regularization term on weights
+- ```reg_lambda:``` L2 regularization term on weights
+- ```min_child_weight:``` Minimum sum of instance weight (hessian) needed in a child
+- ```eta:``` Learning rate, step size shrinkage used in update to prevents overfitting.
+- ```colsample_bytree:``` Subsample ratio of columns when constructing each tree
+- ```base_score:``` Initial prediction score of all instances, global bias. Since dataset is imbalanced (~90% would be a recommended base score)
 
 ## XGBoost Step-by-Step
 
