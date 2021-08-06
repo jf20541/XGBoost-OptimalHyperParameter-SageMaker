@@ -25,7 +25,7 @@ Metric: Receiver Operating Characteristic Curve (ROC AUC) and Minimize ```binary
     
 ## Output
 ```bash
-XGBoost Classifier with Bayesian Optimization Gaussian: 90.85%
+XGBoost Classifier with Bayesian Optimization Gaussian: 0.9085 ROC-AUC 
 
 Optimal Hyper-Parameters:
 
