@@ -10,17 +10,19 @@ Metric: Receiver Operating Characteristic Curve (ROC AUC) and Minimize ```binary
 
 ## Repository File Structure
     ├── src          
-    │   ├── main.py              # Initiated the XGBoost Classifier and optimized its parameter with Bayesian Optimization
-    │   ├── data.py              # Cleaned and featured engineered the dataset
-    │   ├── create_folds.py      # Stratified K-Fold cross-validation with an imbalanced dataset
-    │   └── config.py            # Define path as global variable
+    │   ├── main.py                 # Initiated the XGBoost Classifier and optimized its parameter with Bayesian Optimization
+    │   ├── data.py                 # Cleaned and featured engineered the dataset
+    │   ├── create_folds.py         # Stratified K-Fold cross-validation with an imbalanced dataset
+    │   └── config.py               # Define path as global variable
+    ├── sagemaker
+    │   └── xgboost_sagemaker.ipynb # Fit the XGBoost with defined optimal Hyper-Parameters using AWS SageMaker
     ├── inputs
-    │   ├── train.csv            # Training dataset
-    │   ├── test.csv             # Testing dataset
-    │   └── clean_data.csv       # Cleaned data 
+    │   ├── train.csv               # Training dataset
+    │   ├── test.csv                # Testing dataset
+    │   └── clean_data.csv          # Cleaned data 
     ├── notebooks
-    │   └── healthinsurance.ipynb# Exploratory Data Analysis and Feature Engineering
-    ├── requierments.txt         # Packages used for project
+    │   └── healthinsurance.ipynb   # Exploratory Data Analysis and Feature Engineering
+    ├── requierments.txt            # Packages used for project
     └── README.md
     
 ## Output
