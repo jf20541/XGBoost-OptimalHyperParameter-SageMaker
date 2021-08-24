@@ -81,7 +81,3 @@ Annual_Premium       float64
 PolicySalesChannel   float64
 Vintage              float64
 ```
-## Sources
-https://www.kaggle.com/anmolkumar/health-insurance-cross-sell-prediction
-https://towardsdatascience.com/beginners-guide-to-xgboost-for-classification-problems-50f75aac5390
-https://stackoverflow.com/questions/24458645/label-encoding-across-multiple-columns-in-scikit-learn
