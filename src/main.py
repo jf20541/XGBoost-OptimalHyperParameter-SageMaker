@@ -3,8 +3,7 @@ import numpy as np
 from functools import partial
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, roc_auc_score
-from skopt import gp_minimize
-from skopt import space
+from skopt import gp_minimize, space
 from xgboost import XGBClassifier
 import config
 
@@ -24,16 +23,16 @@ def optimize(params, param_names, x, y):
     params = dict(zip(param_names, params))
 
     # initiate XGBClassifier and K-fold (5)
-    model = XGBClassifier(objective='binary:logistic', **params)
+    model = XGBClassifier(objective="binary:logistic", **params)
     kf = StratifiedKFold(n_splits=5)
-    
+
     # create empty list for metric and loop over folds
     acc = []
     for idx in kf.split(X=x, y=y):
         train_idx, test_idx = idx[0], idx[1]
         xtrain, xtest = x[train_idx], x[test_idx]
         ytrain, ytest = y[train_idx], y[test_idx]
-        
+
         model.fit(xtrain, ytrain)
         pred = model.predict(xtest)
 
@@ -43,7 +42,8 @@ def optimize(params, param_names, x, y):
     # return negative acc to find max optimization
     return -np.mean(acc)
 
-# import csv file and set as array 
+
+# import csv file and set as array
 df = pd.read_csv(config.CLEAN_FILE)
 targets = df["response"].values
 features = df.drop("response", axis=1).values
@@ -76,7 +76,7 @@ optimization_function = partial(
     optimize, param_names=param_names, x=features, y=targets
 )
 
-# initiate gp_minimize for Bayesian Optimization to select the best input values
+# initiate gp_minimize for Bayesian optimization using Gaussian Processes.
 result = gp_minimize(
     optimization_function,
     dimensions=param_space,
