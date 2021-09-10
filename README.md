@@ -1,4 +1,4 @@
-# XGBoostClassifierHyperParameter
+# XGBoost-OptimalHyperParameters-AWS-SageMaker
 
 ## Objective
 Build a Supervised Learning Classification model to predict whether the customers will be interested in vehicle insurance provided by the company. With an imbalanced binary classification dataset (~10% of target values are interested). The primary metric to evaluated XGBoost Model will be ROC-AUC, use Bayesian Optimization Gaussian Process to optimize hyper-parameters, and use Stratified K-Fold to reduce overfitting.
@@ -81,7 +81,3 @@ Annual_Premium       float64
 PolicySalesChannel   float64
 Vintage              float64
 ```
-## Sources
-https://www.kaggle.com/anmolkumar/health-insurance-cross-sell-prediction
-https://towardsdatascience.com/beginners-guide-to-xgboost-for-classification-problems-50f75aac5390
-https://stackoverflow.com/questions/24458645/label-encoding-across-multiple-columns-in-scikit-learn
